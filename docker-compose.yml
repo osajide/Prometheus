@@ -1,0 +1,22 @@
+services:
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        networks:
+            - my_net
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - prom_vol:/prometheus
+        ports:
+            - "9090:9090"
+    node-exporter:
+        image: prom/node-exporter
+        container_name: node-exporter
+        networks:
+            - my_net
+
+networks:
+    my_net:
+    
+volumes:
+    prom_vol:
