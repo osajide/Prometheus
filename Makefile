@@ -7,4 +7,9 @@ build:
 stop:
 	@docker compose down
 
-rebuild: stop build
+fclean:
+	@docker compose down -v
+
+re: stop build
+
+rebuild: fclean build

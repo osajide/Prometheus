@@ -8,12 +8,21 @@ services:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
             - prom_vol:/prometheus
         ports:
-            - "9090:9090"
+            - 9090:9090
     node-exporter:
         image: prom/node-exporter
-        container_name: node-exporter
+        container_name: node_exporter
+        ports:
+            - 9100:9100
+        # pid: host
+        user: root
+        # userns_mode: "host"
         networks:
             - my_net
+        volumes:
+            - /home/osajide/Desktop/prometheus/dir:/host
+        command:
+            - --path.rootfs=/host
 
 networks:
     my_net:
