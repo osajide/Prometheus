@@ -2,30 +2,45 @@ services:
     prometheus:
         image: prom/prometheus
         container_name: prometheus
+        # user: root
         networks:
-            - my_net
+            - docker_myNet
         volumes:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
             - prom_vol:/prometheus
         ports:
             - 9090:9090
+        depends_on:
+            - node-exporter
+
+# ****************************************************
+
     node-exporter:
         image: prom/node-exporter
-        container_name: node_exporter
-        ports:
-            - 9100:9100
-        # pid: host
+        container_name: node-exporter
+        # ports:
+        #     - 9100:9100
+        #pid: host
         user: root
         # userns_mode: "host"
         networks:
-            - my_net
+            - docker_myNet
         volumes:
-            - /home/osajide/Desktop/prometheus/dir:/host
+            - /:/host
         command:
             - --path.rootfs=/host
+    
+# *********************************************************
+
+    # postgres-exporter:
+    #     image: prometheuscommunity/postgres-exporter:v0.16.0
+    #     container_name: postgres-exporter
+    #     networks:
+    #         - docker_myNet
 
 networks:
-    my_net:
+    docker_myNet:
+        external: true
     
 volumes:
     prom_vol:
