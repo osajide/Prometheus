@@ -8,10 +8,12 @@ services:
         volumes:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
             - prom_vol:/prometheus
+            - ./rules.yml:/etc/prometheus/rules.yml
         ports:
             - 9090:9090
         depends_on:
             - node-exporter
+            - alert-manager
 
 # ****************************************************
 
@@ -21,7 +23,7 @@ services:
         # ports:
         #     - 9100:9100
         #pid: host
-        user: root
+        # user: root
         # userns_mode: "host"
         networks:
             - docker_myNet
@@ -38,9 +40,39 @@ services:
     #     networks:
     #         - docker_myNet
 
+# **********************************************************
+
+    alert-manager:
+        image: prom/alertmanager
+        container_name: alert-manager
+        env_file:
+            - .env
+        volumes:
+            - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+            - alert_vol:/alertmanager
+        ports:
+            - 9093:9093
+        networks:
+            - docker_myNet
+
+# ************************************************************
+
+    grafana:
+        image: grafana/grafana
+        container_name: grafana
+        env_file:
+            - .env
+        volumes:
+            - grafana_vol:/var/lib/grafana
+        networks:
+            - docker_myNet
+
+
 networks:
     docker_myNet:
         external: true
-    
+
 volumes:
     prom_vol:
+    alert_vol:
+    grafana_vol:
