@@ -4,11 +4,12 @@ services:
         container_name: prometheus
         # user: root
         networks:
-            - docker_myNet
+            # - docker_myNet
+            - docker_myNet1
         volumes:
-            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./conf/prometheus.yml:/etc/prometheus/prometheus.yml
             - prom_vol:/prometheus
-            - ./rules.yml:/etc/prometheus/rules.yml
+            - ./conf/rules.yml:/etc/prometheus/rules.yml
         ports:
             - 9090:9090
         depends_on:
@@ -26,7 +27,8 @@ services:
         # user: root
         # userns_mode: "host"
         networks:
-            - docker_myNet
+            # - docker_myNet
+            - docker_myNet1
         volumes:
             - /:/host
         command:
@@ -38,22 +40,26 @@ services:
         image: prometheuscommunity/postgres-exporter:v0.16.0
         container_name: postgres-exporter
         networks:
-            - docker_myNet
+            # - docker_myNet
+            - docker_myNet1
 
 # **********************************************************
 
     alert-manager:
-        image: prom/alertmanager
+        build:
+            context: .
+            dockerfile: alertmanagerDockerfile
         container_name: alert-manager
         env_file:
             - .env
         volumes:
-            - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+            - ./conf/alertmanager.yml:/etc/alertmanager/alertmanager.yml
             - alert_vol:/alertmanager
         ports:
             - 9093:9093
         networks:
-            - docker_myNet
+            # - docker_myNet
+            - docker_myNet1
 
 # ************************************************************
 
@@ -65,12 +71,16 @@ services:
         volumes:
             - grafana_vol:/var/lib/grafana
         networks:
-            - docker_myNet
+            # - docker_myNet
+            - docker_myNet1
+        ports:
+            - 3000:3000
 
 
 networks:
-    docker_myNet:
-        external: true
+    docker_myNet1:
+    # docker_myNet:
+        # external: true
 
 volumes:
     prom_vol:

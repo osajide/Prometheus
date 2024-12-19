@@ -1,16 +1,14 @@
-
-
 all:
-	@docker compose up -d
+	@docker compose -f devops-module-compose.yml up -d
 
 build:
-	@docker compose up --build -d
+	@docker compose -f devops-module-compose.yml up --build -d
 
 stop:
-	@docker compose down
+	@docker compose -f devops-module-compose.yml down
 
 fclean:
-	@docker compose down -v
+	@docker compose -f devops-module-compose.yml down -v
 
 re: stop build
 
