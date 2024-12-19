@@ -1,11 +1,22 @@
 services:
+
+    nginx:
+        build:
+            context: .
+            dockerfile: nginxDockerfile
+        container_name: nginx
+        networks:
+            - docker_myNet
+        ports:
+            - 443:443
+
     prometheus:
         image: prom/prometheus
         container_name: prometheus
         # user: root
         networks:
-            # - docker_myNet
-            - docker_myNet1
+            - docker_myNet
+            # - docker_myNet1
         volumes:
             - ./conf/prometheus.yml:/etc/prometheus/prometheus.yml
             - prom_vol:/prometheus
@@ -27,8 +38,8 @@ services:
         # user: root
         # userns_mode: "host"
         networks:
-            # - docker_myNet
-            - docker_myNet1
+            - docker_myNet
+            # - docker_myNet1
         volumes:
             - /:/host
         command:
@@ -39,9 +50,13 @@ services:
     postgres-exporter:
         image: prometheuscommunity/postgres-exporter:v0.16.0
         container_name: postgres-exporter
+        volumes:
+            - ./conf/queries.yml:/etc/postgres/queries.yml
+        env_file:
+            - .env
         networks:
-            # - docker_myNet
-            - docker_myNet1
+            - docker_myNet
+            # - docker_myNet1
 
 # **********************************************************
 
@@ -58,8 +73,8 @@ services:
         ports:
             - 9093:9093
         networks:
-            # - docker_myNet
-            - docker_myNet1
+            - docker_myNet
+            # - docker_myNet1
 
 # ************************************************************
 
@@ -71,16 +86,16 @@ services:
         volumes:
             - grafana_vol:/var/lib/grafana
         networks:
-            # - docker_myNet
-            - docker_myNet1
+            - docker_myNet
+            # - docker_myNet1
         ports:
             - 3000:3000
 
 
 networks:
-    docker_myNet1:
-    # docker_myNet:
-        # external: true
+    # docker_myNet1:
+    docker_myNet:
+        external: true
 
 volumes:
     prom_vol:

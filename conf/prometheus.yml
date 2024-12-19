@@ -1,6 +1,10 @@
 global:
   scrape_interval: 1s
 
+# default retention time 15d
+# storage.tsdb:
+#   retention.time: 1m
+
 rule_files:
   - 'rules.yml'
 
