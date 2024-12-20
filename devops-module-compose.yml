@@ -1,10 +1,11 @@
 services:
 
     nginx:
-        build:
-            context: .
-            dockerfile: nginxDockerfile
+        image: nginx:latest
         container_name: nginx
+        volumes:
+            - ./ssl:/ssl
+            - ./conf/nginx.conf:/etc/nginx/conf.d/django.conf
         networks:
             - docker_myNet
         ports:
