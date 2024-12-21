@@ -86,6 +86,7 @@ services:
             - .env
         volumes:
             - grafana_vol:/var/lib/grafana
+            - ./dashboards:/etc/grafana/provisioning/dashboards
         networks:
             - docker_myNet
             # - docker_myNet1
